@@ -10,6 +10,7 @@ Base URL: `https://your-gateway.vercel.app`
 - [Error Codes](#error-codes)
 - [Rate Limiting](#rate-limiting)
 - [Security](#security)
+- [Vercel Environment Variables](#vercel-environment-variables)
 
 ---
 
@@ -395,6 +396,34 @@ if (!decoded.verified) {
 
 - **OTP Token:** 5 minutes
 - **Verification Token:** 1 hour (configurable)
+
+---
+
+## Vercel Environment Variables
+
+If you see this during deployment: "Environment Variable \"SMTP_HOST\" references Secret \"smtp_host\", which does not exist", your `vercel.json` was pointing to Vercel Secrets (values like `@smtp_host`) that haven’t been created.
+
+Fix it in one of two ways:
+
+1) Recommended: Set plain Environment Variables in the Vercel Dashboard
+- Vercel → Project → Settings → Environment Variables
+- Add (Production or All Environments):
+  - `SMTP_HOST` = `smtp.gmail.com`
+  - `SMTP_PORT` = `587`
+  - `SMTP_USER` = your Gmail address (e.g., `authiitp@gmail.com`)
+  - `SMTP_PASS` = your 16-character Gmail App Password
+  - `JWT_SECRET` = a strong random string (32+ chars)
+  - `FROM_EMAIL` = optional, defaults to `SMTP_USER`
+  - `FROM_NAME` = optional, e.g., `IIT Patna Auth Gateway`
+  - `NEXT_PUBLIC_APP_URL` = your deployed URL, e.g., `https://your-project.vercel.app`
+- Redeploy the project.
+
+2) Alternative: Use Vercel Secrets with `@name` references
+- Create secrets named: `smtp_host`, `smtp_port`, `smtp_user`, `smtp_pass`, `jwt_secret`, `from_email`, `from_name`
+- Keep `vercel.json` entries like `"SMTP_HOST": "@smtp_host"`
+- Redeploy after the secrets exist
+
+Note: In this repo, we removed secret references from `vercel.json` to avoid this error by default. Configure variables in the Vercel Dashboard instead.
 
 ---
 
