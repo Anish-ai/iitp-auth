@@ -133,9 +133,9 @@ function createVerificationToken(userData) {
     iss: 'iitp-auth-gateway',
   };
 
-  // Sign with 1 hour expiry
+  // Sign with 24 hour expiry (adjust as needed: '1h', '6h', '24h', '7d')
   const token = jwt.sign(payload, JWT_SECRET, {
-    expiresIn: '1h',
+    expiresIn: '6h',
   });
 
   return token;
